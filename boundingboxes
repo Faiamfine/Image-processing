@@ -1,0 +1,44 @@
+import cv2
+import math
+
+
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+frame=cv2.imread('/Users/fai/Desktop/example\of\ istancing.jpeg')
+
+gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+print(faces)
+
+
+p1 = 361  # image pont
+p2 = 237
+cv2.circle(frame, (p1, p2), 5, ((139,0,0)), -1)
+for face in faces:
+   (x, y, w, h) = face
+   (x1, y1, w1, h1) = faces[0]
+
+
+   cx1, cy1 = int(x + w / 2), int(y + h / 2)
+   cx2, cy2 = int(x1 + w1 / 2), int(y1 + h1 / 2)
+
+   cv2.circle(frame, (cx1, cy1), 2, (0, 245, 30), -1)
+   cv2.circle(frame, (cx2, cy2), 2, (0, 245, 30), -1)
+
+  # dist=math.sqrt(((cx1-cx2)**2)+(cy2-cy1)**2))
+   cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 3)
+
+   dis = (math.sqrt(((cx2 - cx1) ** 2) + ((cy2 - cy1) ** 2)) ** 0.5)
+   dis = int(dis)
+   print("distance is ",dis)
+   cv2.line(frame, (cx1, cy1), (p1,p2 ), (0, 234, 76), 2)
+
+(x,y,w,h)=face
+cv2.putText(frame, 'distance={}'.format(dis), (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.6, 
+(139, 0, 0))
+
+
+
+
+cv2.imshow('img',frame)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
